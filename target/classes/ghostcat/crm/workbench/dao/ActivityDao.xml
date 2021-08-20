@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ghostcat.crm.workbench.dao.ActivityDao">
+    <insert id="insertActivity">
+        insert into tbl_activity(id,owner,name,startDate,endDate,cost,description,createTime,createBy) values (#{id},#{owner},#{name},#{startDate},#{endDate},#{cost},#{description},#{createTime},#{createBy})
+    </insert>
+    <insert id="insertActivityRemark">
+        insert into tbl_activity_remark(id, noteContent, createTime, createBy, editFlag, activityId) VALUES (#{id},#{noteContent},#{createTime},#{createBy},#{editFlag},#{activityId})
+    </insert>
+    <update id="updateActivity">
+        update tbl_activity set owner = #{owner},name = #{name},startDate = #{startDate},endDate = #{endDate},cost = #{cost},description = #{description},editTime = #{editTime},editBy = #{editBy}
+        where id = #{id};
+    </update>
+    <update id="updateActivityRemarknoteContent">
+        update tbl_activity_remark set noteContent = #{noteContent},editTime = #{editTime},editBy = #{editBy},editFlag = #{editFlag} where id = #{id}
+    </update>
+    <delete id="deleteActivity">
+        delete from tbl_activity where id = #{id};
+    </delete>
+    <delete id="deleteActivityRemarkWithAID">
+        delete from tbl_activity_remark where id = #{id}
+    </delete>
+    <delete id="deleteActivityRemarkWithActivityID">
+        delete from tbl_activity_remark where activityId = #{id}
+    </delete>
+    <select id="selectAllUser" resultType="ghostcat.crm.settings.domain.User">
+        select * from tbl_user
+    </select>
+    <select id="selectActivityWithPage" resultType="ghostcat.crm.workbench.domain.Activity">
+        select a.id,u.name as owner,a.name,a.startDate,a.endDate,a.cost,a.description,a.createTime,a.createBy,a.editTime,a.editBy from tbl_activity a join tbl_user u on a.owner = u.id
+        <where>
+            <if test="name != null and name !=''">
+                and a.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner !=''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="startTime != null and startTime !=''">
+                and a.startDate like '%' #{startTime} '%'
+            </if>
+            <if test="endTime != null and endTime !=''">
+                and a.endDate like '%' #{endTime} '%'
+            </if>
+        </where>
+                order by a.createTime desc
+    </select>
+    <select id="selectActivityWithPageCount" resultType="java.lang.Integer">
+        select count(*) from tbl_activity
+        <where>
+            <if test="name != null and name !=''">
+                and name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner !=''">
+                and owner like '%' #{owner} '%'
+            </if>
+            <if test="startTime != null and startTime !=''">
+                and startTime like '%' #{startTime} '%'
+            </if>
+            <if test="endTime != null and endTime !=''">
+                and endTime like '%' #{endTime} '%'
+            </if>
+        </where>
+    </select>
+    <select id="selectActivityWithID" resultType="ghostcat.crm.workbench.domain.Activity">
+        select * from tbl_activity where id = #{id}
+    </select>
+    <select id="selectActivityWithIDForDetail" resultType="ghostcat.crm.workbench.domain.Activity">
+        select a.id,u.name as owner,a.name,a.startDate,a.endDate,a.cost,a.description,a.createTime,a.createBy,a.editTime,a.editBy from tbl_activity a join tbl_user u on a.owner = u.id where a.id = #{id}
+    </select>
+    <select id="selectActivityRemarkWithActivityID" resultType="ghostcat.crm.workbench.domain.ActivityRemark">
+        select * from tbl_activity_remark where activityId = #{activityId} order by createTime
+    </select>
+    <select id="selectActivityRemarkWithID" resultType="ghostcat.crm.workbench.domain.ActivityRemark">
+        select * from tbl_activity_remark where id = #{id}
+    </select>
+    <select id="selectActivityWithClueID" resultType="ghostcat.crm.workbench.domain.Activity">
+        select c.id as id,a.name,u.name as owner,a.startDate,a.endDate from tbl_activity a join tbl_user u on a.owner = u.id join tbl_clue_activity_relation c on a.id = c.activityId
+        where clueId = #{id}
+    </select>
+    <select id="selectActivityNotInRelation" resultType="ghostcat.crm.workbench.domain.Activity">
+        select a.id,a.name,a.startDate,a.endDate,u.name as owner
+        from tbl_activity a join tbl_user u on a.owner = u.id
+        <where>
+            <if test="name != null and name !=''">
+                and a.name like '%' #{name} '%'
+            </if>
+            <if test="clueID != null and clueID !=''">
+                and a.id not in(
+                select activityId
+                from tbl_clue_activity_relation
+                where clueID = #{clueID}
+                )
+            </if>
+        </where>
+    </select>
+    <select id="selectActivityNotInRelationCount" resultType="java.lang.Integer">
+        select count(*) from tbl_activity a join tbl_user u on a.owner = u.id
+        <where>
+            <if test="name != null and name !=''">
+                and a.name like '%' #{name} '%'
+            </if>
+            <if test="clueID != null and clueID !=''">
+                and a.id not in(
+                select activityId
+                from tbl_clue_activity_relation
+                where clueID = #{clueID}
+                )
+            </if>
+        </where>
+    </select>
+    <select id="selectActivityWithName" resultType="ghostcat.crm.workbench.domain.Activity">
+        select a.id,a.name,a.startDate,a.endDate,u.name as owner from tbl_activity a join tbl_user u on a.owner = u.id
+        <where>
+            <if test="name != null and name != ''">
+                and a.name like '%' #{name} '%'
+            </if>
+        </where>
+    </select>
+    <select id="selectActivityWithNameCount" resultType="java.lang.Integer">
+        select count(*) from tbl_activity a join tbl_user u on a.owner = u.id
+        <where>
+            <if test="name != null and name != ''">
+                and a.name like '%' #{name} '%'
+            </if>
+        </where>
+    </select>
+    <select id="selectAllActivityWithContactsId" resultType="ghostcat.crm.workbench.domain.Activity">
+        select a.id,u.name as owner,a.name,a.editTime,a.editBy,a.description,a.createTime,a.endDate,a.startDate,a.cost,a.createBy
+        from tbl_activity a join tbl_contacts_activity_relation c on a.id = c.activityId join tbl_user u on a.owner = u.id
+        where c.contactsId = #{contactsId}
+    </select>
+    <select id="selectActivityNotInCARelation" resultType="ghostcat.crm.workbench.domain.Activity">
+        select a.id, u.name as owner, a.name, a.startDate, a.endDate
+        from tbl_activity a join tbl_user u on a.owner = u.id
+        <where>
+            <if test="name != null and name !=''">
+                and a.name like '%' #{name} '%'
+            </if>
+            <if test="contactsId != null and contactsId !=''">
+                and a.id not in(
+                    select activityId from tbl_contacts_activity_relation where contactsId = #{contactsId}
+                )
+            </if>
+        </where>
+    </select>
+    <select id="selectActivityNotInCARelationCount" resultType="java.lang.Integer">
+        select count(*)
+        from tbl_activity a join tbl_user u on a.owner = u.id
+        <where>
+            <if test="name != null and name !=''">
+                and a.name like '%' #{name} '%'
+            </if>
+            <if test="contactsId != null and contactsId !=''">
+                and a.id not in(
+                select activityId from tbl_contacts_activity_relation where contactsId = #{contactsId}
+                )
+            </if>
+        </where>
+    </select>
+    <select id="selectActivityNameWithId" resultType="java.lang.String">
+        select name from tbl_activity where id = #{activityId}
+    </select>
+</mapper>

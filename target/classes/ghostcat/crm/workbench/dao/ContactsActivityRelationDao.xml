@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ghostcat.crm.workbench.dao.ContactsActivityRelationDao">
+
+
+    <insert id="insertContactsActivityRelation">
+        insert into tbl_contacts_activity_relation(id, contactsId, activityId) VALUES (#{id},#{contactsId},#{activityId})
+    </insert>
+    <insert id="insertCARelation">
+        insert into tbl_contacts_activity_relation(id, contactsId, activityId) VALUES (#{id},#{contactsId},#{activityId})
+    </insert>
+    <delete id="deleteContactsActivityRelationWithCID">
+        delete from tbl_contacts_activity_relation where contactsId = #{id}
+    </delete>
+    <delete id="deleteContactsActivityRelationWithCAID">
+        delete from tbl_contacts_activity_relation where contactsId = #{contactsId} and activityId = #{activityId}
+    </delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

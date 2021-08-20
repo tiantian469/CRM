@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ghostcat.crm.workbench.dao.CustomerDao">
+    <insert id="addCustomer">
+        insert into tbl_customer(id, owner, name, website, phone, editTime, editBy, contactSummary, nextContactTime, description, address) values (#{id},#{owner},#{name},#{website},#{phone},#{createBy},#{createTime},#{contactSummary},#{nextContactTime},#{description},#{address})
+    </insert>
+    <insert id="insertCustomerWithName">
+        insert into tbl_customer(id, owner, name, createBy, createTime) VALUES (#{id},#{owner},#{name},#{createBy},#{createTime})
+    </insert>
+    <update id="updateCustomer">
+        update tbl_customer set owner = #{owner},name = #{name},website = #{website},phone = #{phone},editBy = #{editBy},editTime = #{editTime},contactSummary = #{contactSummary},nextContactTime = #{nextContactTime},description = #{description},address = #{address}
+        where id = #{id}
+    </update>
+    <delete id="deleteCustomerWithID">
+        delete from tbl_customer where id = #{id}
+    </delete>
+
+
+    <select id="queryCustomerWithName" resultType="ghostcat.crm.workbench.domain.Customer">
+        select * from tbl_customer where name = #{company}
+    </select>
+    <select id="selectCustomer" resultType="ghostcat.crm.workbench.domain.Customer">
+        select c.id, u.name as owner, c.name, c.website, c.phone, c.createBy, c.createTime, c.editBy, c.editTime, contactSummary, nextContactTime, description, address from tbl_customer c
+        join tbl_user u on c.owner = u.id
+        <where>
+            <if test="name != null and name !=''">
+                and c.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner !=''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="phone != null and phone !=''">
+                and c.phone like '%' #{phone} '%'
+            </if>
+            <if test="website != null and website != ''">
+                and c.website like '%' #{website} '%'
+            </if>
+        </where>
+    </select>
+    <select id="selectCustomerCount" resultType="java.lang.Integer">
+        select count(*) from tbl_customer c
+        join tbl_user u on c.owner = u.id
+        <where>
+            <if test="name != null and name !=''">
+                and c.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner !=''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="phone != null and phone !=''">
+                and c.phone like '%' #{phone} '%'
+            </if>
+            <if test="website != null and website != ''">
+                and c.website like '%' #{website} '%'
+            </if>
+        </where>
+    </select>
+    <select id="selectCustomerWithID" resultType="ghostcat.crm.workbench.domain.Customer">
+        select * from tbl_customer where id = #{id};
+    </select>
+    <select id="selectCustomerWithID2" resultType="ghostcat.crm.workbench.domain.Customer">
+        select c.id, u.name as owner, c.name, c.website, c.phone, c.createBy, c.createTime, c.editBy, c.editTime, c.contactSummary, c.nextContactTime, c.description, c.address
+        from tbl_customer c join tbl_user u on c.owner = u.id where c.id = #{id}
+    </select>
+    <select id="selectCustomerWithCName" resultType="ghostcat.crm.workbench.domain.Customer">
+        select * from tbl_customer where name = #{customerName}
+    </select>
+    <select id="selectLikeCustomerName" resultType="java.lang.String">
+        select name from tbl_customer where name like '%' #{name} '%'
+    </select>
+    <select id="selectAllIdCustomerIdWithCName" resultType="java.lang.String">
+        select id from tbl_customer
+        <where>
+            <if test="customerName != null and customerName !=''">
+                and name like '%' #{customerName} '%'
+            </if>
+        </where>
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

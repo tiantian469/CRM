@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd">
+    <mvc:annotation-driven/>
+    <context:component-scan base-package="ghostcat.crm.settings.controller"/>
+    <context:component-scan base-package="ghostcat.crm.workbench.controller"/>
+    <mvc:resources mapping="/static/**" location="/static/"/>
+    <bean id="internalResourceViewResolver1" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="order" value="0"/>
+    </bean>
+    <context:component-scan base-package="ghostcat.crm.settings.handle"/>
+    <context:component-scan base-package="ghostcat.crm.workbench.handle"/>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/static/workbench/index.jsp"/>
+            <mvc:mapping path="/user/*.do"/>
+            <mvc:mapping path="/activity/*.do"/>
+            <mvc:mapping path="/clue/*.do"/>
+            <mvc:mapping path="/customer/*.do"/>
+            <mvc:mapping path="/contacts/*.do"/>
+            <mvc:mapping path="/tran/*.do"/>
+            <mvc:exclude-mapping path="/user/loginJudgeActandPwd.do"/>
+            <bean class="ghostcat.crm.settings.handle.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <context:component-scan base-package="ghostcat.crm.workbench.handle"/>
+</beans>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ghostcat.crm.workbench.dao.ContactsDao">
+
+
+    <insert id="addContacts">
+        insert into tbl_contacts(id, owner, source, customerId, fullname, appellation, email, mphone, job, birth, createBy, createTime, description, contactSummary, nextContactTime, address) values(#{id},#{owner},#{source},#{customerId},#{fullname},#{appellation},#{email},#{mphone},#{job},#{birth},#{createBy},#{createTime},#{description},#{contactSummary},#{nextContactTime},#{address})
+    </insert>
+    <update id="updateContacts">
+        update tbl_contacts set owner = #{owner},source = #{source},customerId = #{customerId},fullname = #{fullname},appellation = #{appellation},email = #{email},mphone = #{mphone},job = #{job},birth = #{birth},editBy = #{editBy},editTime = #{editTime},description = #{description},contactSummary = #{contactSummary},nextContactTime = #{nextContactTime},address = #{address}
+        where id = #{id}
+    </update>
+    <delete id="deleteContactsWithID">
+        delete from tbl_contacts where id in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteContactsWithID2">
+        delete from tbl_contacts where id = #{id}
+    </delete>
+    <select id="selectLikeContactsName" resultType="java.lang.String">
+        select fullname from tbl_contacts where fullname like '%' #{name} '%'
+    </select>
+    <select id="selectContacts" resultType="ghostcat.crm.workbench.domain.Contacts">
+        select c.id,c.fullname,u.name as owner,c.source,c.birth from tbl_contacts c join tbl_user u on c.owner = u.id
+        <where>
+            <if test="fullname != null and fullname !=''">
+                and c.fullname like '%' #{fullname} '%'
+            </if>
+            <if test="owner != null and owner !=''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="source != null and source !=''">
+                and c.source like '%' #{source} '%'
+            </if>
+            <if test="birth != null and birth != ''">
+                and c.birth like '%' #{birth} '%'
+            </if>
+        </where>
+    </select>
+    <select id="selectContactsCount" resultType="java.lang.Integer">
+        select count(*) from tbl_contacts c join tbl_user u on c.owner = u.id
+        <where>
+            <if test="fullname != null and fullname !=''">
+                and c.fullname like '%' #{fullname} '%'
+            </if>
+            <if test="owner != null and owner !=''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="source != null and source !=''">
+                and c.source like '%' #{source} '%'
+            </if>
+            <if test="birth != null and birth != ''">
+                and c.birth like '%' #{birth} '%'
+            </if>
+        </where>
+    </select>
+    <select id="selectContactsWithID" resultType="ghostcat.crm.workbench.domain.Contacts">
+        select c.id, c.owner, c.source, u.name as customerId, c.fullname, c.appellation, c.email, c.mphone, c.job, c.birth, c.createBy, c.createTime, c.description, c.contactSummary, c.nextContactTime, c.address
+        from tbl_contacts c join tbl_customer u on c.customerId = u.id where c.id = #{id}
+    </select>
+    <select id="selectContactsWithID2" resultType="ghostcat.crm.workbench.domain.Contacts">
+        select c.id, u.name as owner, c.source, o.name as customerId, c.fullname, c.appellation, c.email, c.mphone, c.job, c.birth, c.createBy, c.createTime, c.description, c.contactSummary, c.nextContactTime, c.address
+        from tbl_contacts c join tbl_customer o on c.customerId = o.id join tbl_user u on c.owner = u.id where c.id = #{id}
+    </select>
+    <select id="selectContactsWithCustomerID" resultType="ghostcat.crm.workbench.domain.Contacts">
+        select * from tbl_contacts where customerId = #{customerId}
+    </select>
+    <select id="selectContactsWithName" resultType="ghostcat.crm.workbench.domain.Contacts">
+        select id from tbl_contacts where fullname = #{contactsName}
+    </select>
+    <select id="selectAllIdContactsIdWithCName" resultType="java.lang.String">
+        select id from tbl_contacts
+        <where>
+            <if test="contactsName != null and contactsName !=''">
+                and fullname like '%' #{contactsName} '%'
+            </if>
+        </where>
+    </select>
+    <select id="selectContactsWithLikeName" resultType="ghostcat.crm.workbench.domain.Contacts">
+        select * from tbl_contacts where fullname like '%' #{fullname} '%'
+    </select>
+    <select id="selectContactsWithLikeNameCount" resultType="java.lang.Integer">
+        select count(*) from tbl_contacts where fullname like '%' #{fullname} '%'
+    </select>
+    <select id="selectContactsNameWithId" resultType="java.lang.String">
+        select fullname from tbl_contacts where id = #{contactsId}
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
