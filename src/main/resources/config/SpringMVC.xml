@@ -30,6 +30,7 @@
             <mvc:mapping path="/contacts/*.do"/>
             <mvc:mapping path="/tran/*.do"/>
             <mvc:exclude-mapping path="/user/loginJudgeActandPwd.do"/>
+            <mvc:exclude-mapping path="/user/queryWeather"/>
             <bean class="ghostcat.crm.settings.handle.LoginInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

@@ -1,5 +1,7 @@
 package ghostcat.crm.settings.controller;
 
+import com.wxapi.WxApiCall.WxApiCall;
+import com.wxapi.model.RequestModel;
 import ghostcat.crm.exception.ActOrPwdNotFoundException;
 import ghostcat.crm.exception.LoginException;
 import ghostcat.crm.settings.domain.User;
@@ -56,5 +58,22 @@ public class UserController {
     @ResponseBody
     public List<User> queryAllUser(){
         return userService.queryAllUser();
+    }
+
+    @RequestMapping(value = "/queryWeather")
+    @ResponseBody
+    public String queryWeather(String city){
+        RequestModel model = new RequestModel();
+        model.setGwUrl("https://way.jd.com/jisuapi/weather");
+        model.setAppkey("5828e4a6345881b01d1a67143002085b");
+        Map<String,Object> queryMap = new HashMap<>();
+        queryMap.put("city",city); //访问参数
+        //queryMap.put("cityid",""); //访问参数
+        //queryMap.put("citycode",""); //访问参数
+        model.setQueryParams(queryMap);
+        WxApiCall wxApiCall = new WxApiCall();
+        wxApiCall.setModel(model);
+        System.out.println(wxApiCall.request());
+        return wxApiCall.request();
     }
 }
